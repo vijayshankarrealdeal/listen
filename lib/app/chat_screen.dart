@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class ChatDetail extends StatelessWidget {
   final String notUsername;
@@ -28,6 +29,20 @@ class ChatDetail extends StatelessWidget {
           title: Text(
             notUsername,
           ),
+          actions: [
+            ZegoSendCallInvitationButton(
+              borderRadius: 5,
+              iconSize:const Size(40, 40),
+              isVideoCall: true,
+              resourceID: "zego_call",
+              invitees: [
+                ZegoUIKitUser(
+                  id: uids.where((x)=>x.compareTo(db.currentUseruid) != 0).first,
+                  name:notUsername,
+                ),
+              ],
+            ),
+          ],
         ),
         body: SafeArea(
           child: StreamBuilder<List<ChatMessage>>(

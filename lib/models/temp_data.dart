@@ -18,7 +18,7 @@ class TempData {
 
   List<Map<String, dynamic>> psyData = [
     {
-      "uid": "e03427b2-f1d2-4f87-a0b2-3a29e74faef1",
+      "uid": "EWaa6QEIrggJWzihp8oIcQnDFNE3",
       "name": "Dr. Emily Smith",
       "psychologist_title": "Clinical Psychologist",
       "specialization": "Cognitive Behavioral Therapy",

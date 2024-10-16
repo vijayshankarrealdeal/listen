@@ -101,7 +101,7 @@ class Auth extends ChangeNotifier {
           verificationFailed: (e) {
             load = false;
             optNow = false;
-            errorAlert(context, e.toString());
+            //errorAlert(context, e.toString());
             notifyListeners();
           },
           codeSent: (String verificationId, int? resendToken) {

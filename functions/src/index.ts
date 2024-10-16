@@ -5,9 +5,9 @@ admin.initializeApp();
 
 // Function to send notification on new message
 exports.sendChatNotification = functions.firestore
-  .document("chatroom/{chatId}/")
+  .document("chatroom/{*}/")
   .onCreate(async (snapshot, context) => {
-    const mdata = snapshot.data();c
+    const mdata = snapshot.data();
 
     if (!mdata) {
       console.log("No message data found");

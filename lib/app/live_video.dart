@@ -1,19 +1,18 @@
 import 'dart:developer';
-
 import 'package:animated_rating_stars/animated_rating_stars.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_expanded_tile/flutter_expanded_tile.dart';
-import 'package:listen/app/about.dart';
+import 'package:listen/app/calls.dart';
 import 'package:listen/app/chat_screen.dart';
 import 'package:listen/models/chat_model.dart';
 import 'package:listen/routes/user_page.dart';
 import 'package:listen/models/temp_data.dart';
 import 'package:listen/services/db.dart';
 import 'package:provider/provider.dart';
+import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 
 class LiveVideo extends StatelessWidget {
   const LiveVideo({super.key});
@@ -22,6 +21,9 @@ class LiveVideo extends StatelessWidget {
   Widget build(BuildContext context) {
     final inactiveDb = Provider.of<Database>(context, listen: false);
     final data = TempData();
+    List<Psychologist> userdataList = data.psychologistList
+        .where((i) => i.uid.compareTo(inactiveDb.currentUseruid) != 0)
+        .toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text("Talk to psysolgist"),
@@ -36,9 +38,9 @@ class LiveVideo extends StatelessWidget {
             ),
           );
         },
-        itemCount: data.psychologistList.length,
+        itemCount: userdataList.length,
         itemBuilder: (ctx, idx) {
-          Psychologist userdata = data.psychologistList[idx];
+          Psychologist userdata = userdataList[idx];
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
@@ -155,12 +157,23 @@ class LiveVideo extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          IconButton(
-                            icon: Icon(CupertinoIcons.phone_circle,
-                                size: 38, color: Colors.green.shade600),
-                            onPressed: () {},
+                          ZegoSendCallInvitationButton(
+                            onPressed: (code, message, x) {
+                              log(message);
+                              log(code);
+                              log(x.first);
+                            },
+                            borderRadius: 10,
+                            isVideoCall: true,
+                            resourceID: "zego_call",
+                            invitees: [
+                              ZegoUIKitUser(
+                                id: userdata.uid,
+                                name: userdata.name,
+                              ),
+                              
+                            ],
                           ),
-                          const SizedBox(width: 8),
                           IconButton(
                             icon: Icon(CupertinoIcons.chat_bubble_2,
                                 size: 38, color: Colors.green.shade600),
