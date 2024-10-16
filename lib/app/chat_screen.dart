@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class ChatDetail extends StatelessWidget {
   final String notUsername;
@@ -31,14 +32,16 @@ class ChatDetail extends StatelessWidget {
           ),
           actions: [
             ZegoSendCallInvitationButton(
-              borderRadius: 5,
-              iconSize:const Size(40, 40),
+              borderRadius: 1,
+              iconSize: const Size(30, 30),
               isVideoCall: true,
               resourceID: "zego_call",
               invitees: [
                 ZegoUIKitUser(
-                  id: uids.where((x)=>x.compareTo(db.currentUseruid) != 0).first,
-                  name:notUsername,
+                  id: uids
+                      .where((x) => x.compareTo(db.currentUseruid) != 0)
+                      .first,
+                  name: notUsername,
                 ),
               ],
             ),

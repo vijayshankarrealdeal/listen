@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:listen/login/onboard.dart';
 import 'package:listen/homepage_app.dart';
@@ -31,11 +33,11 @@ void main() async {
     //   kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
   );
   final navkey = GlobalKey<NavigatorState>();
-  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navkey);
-
   ZegoUIKit().initLog().then((value) {
-    ZegoUIKitPrebuiltCallInvitationService()
-        .useSystemCallingUI([ZegoUIKitSignalingPlugin()]);
+    final service = ZegoUIKitPrebuiltCallInvitationService();
+    service.setNavigatorKey(navkey);
+    service.useSystemCallingUI([ZegoUIKitSignalingPlugin()]);
+
     runApp(MultiProvider(providers: [
       ChangeNotifierProvider<Auth>(create: (ctx) => Auth()),
       ChangeNotifierProvider<ColorMode>(create: (ctx) => ColorMode()),
@@ -58,16 +60,34 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               ZegoUIKitPrebuiltCallInvitationService().init(
-                appID: 1491639421 /*input your AppID*/,
-                appSign:
-                    "f6b11adcf1935b18e25836bc428e3e48e7f89cf49e5d7092f2c9bf2d2df97572" /*input your AppSign*/,
-                userID: snapshot.data!.uid,
-                userName: auth.phoneNumber.text,
-                plugins: [ZegoUIKitSignalingPlugin(),],
-                uiConfig: ZegoCallInvitationUIConfig(
-                  prebuiltWithSafeArea: true,
-                )
-              );
+                  appID: 1491639421 /*input your AppID*/,
+                  appSign:
+                      "f6b11adcf1935b18e25836bc428e3e48e7f89cf49e5d7092f2c9bf2d2df97572" /*input your AppSign*/,
+                  userID: snapshot.data!.uid,
+                  userName: auth.phoneNumber.text,
+                  plugins: [ZegoUIKitSignalingPlugin()],
+                  requireConfig: (ZegoCallInvitationData data) {
+                    print(data);
+                    var config = (data.invitees.length > 1)
+                        ? ZegoCallInvitationType.videoCall == data.type
+                            ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
+                            : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
+                        : ZegoCallInvitationType.videoCall == data.type
+                            ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+                            : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
+
+                    config
+                      ..foreground = const Positioned(
+                        top: 100,
+                        right: 20,
+                        child: CircleAvatar(),
+                      );
+                    return config;
+                  },
+                  uiConfig: ZegoCallInvitationUIConfig(
+                      prebuiltWithSafeArea: true,
+                      invitee: ZegoCallInvitationInviteeUIConfig(),
+                      inviter: ZegoCallInvitationInviterUIConfig()));
               return MultiProvider(
                 providers: [
                   ChangeNotifierProvider(
