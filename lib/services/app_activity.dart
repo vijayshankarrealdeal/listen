@@ -15,7 +15,6 @@ class LifecycleNotifier with ChangeNotifier, WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.detached) {
       // Code to execute before the app is closed
-      print("App is about to close");
       // Notify listeners if needed
       notifyListeners();
     }

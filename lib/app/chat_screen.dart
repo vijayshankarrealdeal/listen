@@ -1,4 +1,3 @@
-import 'package:listen/models/chat_user.dart';
 import 'package:listen/models/message.dart';
 import 'package:listen/modules/chat_logic.dart';
 import 'package:listen/modules/color_mode.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class ChatDetail extends StatelessWidget {
   final String notUsername;

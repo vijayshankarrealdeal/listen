@@ -117,7 +117,7 @@ class LiveVideo extends StatelessWidget {
                         customHalfFilledIcon: Icons.star_half,
                         customEmptyIcon: Icons.star_border,
                         starSize: 10.0,
-                        animationDuration: Duration(milliseconds: 300),
+                        animationDuration:const Duration(milliseconds: 300),
                         animationCurve: Curves.easeInOut,
                         readOnly: true,
                       ),
@@ -196,7 +196,9 @@ class LiveVideo extends StatelessWidget {
                                           ],
                                           notUsername: userdata.name),
                                     ));
-                              } catch (e) {}
+                              } catch (e) {
+                                log(e.toString());
+                              }
                             },
                           ),
                         ],

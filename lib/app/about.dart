@@ -62,7 +62,7 @@ class Wallet extends StatelessWidget {
                             child: CircleAvatar(
                                 radius: 30,
                                 backgroundColor: Colors.green.shade600,
-                                child: Icon(CupertinoIcons.add,
+                                child:const Icon(CupertinoIcons.add,
                                     size: 45, color: Colors.white))),
                         Text(
                           "Credit to app",

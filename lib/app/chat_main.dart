@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:listen/app/chat_screen.dart';
 import 'package:listen/models/chat_user.dart';

@@ -1,4 +1,5 @@
-import 'package:listen/models/chat_user.dart';
+import 'dart:developer';
+
 import 'package:listen/models/message.dart';
 import 'package:listen/services/db.dart';
 import 'package:flutter/cupertino.dart';
@@ -31,7 +32,9 @@ class ChatLogicExtender extends ChangeNotifier {
         ),
       );
       controller.clear();
-    } catch (e) {}
+    } catch (e) {
+      log(e.toString());
+    }
     notifyListeners();
   }
 }

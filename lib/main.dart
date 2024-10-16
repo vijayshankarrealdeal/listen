@@ -32,6 +32,10 @@ void main() async {
     androidProvider: AndroidProvider.debug,
     //   kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
   );
+  var k = await FirebaseAppCheck.instance.getToken();
+  log(k.toString());
+  
+
   final navkey = GlobalKey<NavigatorState>();
   ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navkey);
   ZegoUIKit().initLog().then((value) {
@@ -66,16 +70,6 @@ class MyApp extends StatelessWidget {
                   userID: snapshot.data!.uid,
                   userName: auth.phoneNumber.text,
                   plugins: [ZegoUIKitSignalingPlugin()],
-                  // requireConfig: (ZegoCallInvitationData data) {
-                  //   print(data);
-                  //   var config = (data.invitees.length > 1)
-                  //       ? ZegoCallInvitationType.videoCall == data.type
-                  //           ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
-                  //           : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
-                  //       : ZegoCallInvitationType.videoCall == data.type
-                  //           ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
-                  //           : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
-                  // },
                   uiConfig: ZegoCallInvitationUIConfig(
                       prebuiltWithSafeArea: true,
                       invitee: ZegoCallInvitationInviteeUIConfig(),

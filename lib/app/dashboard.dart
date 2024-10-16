@@ -26,7 +26,7 @@ class Dashboard extends StatelessWidget {
       ),
       drawer: SafeArea(
         child: Material(
-          shape: RoundedRectangleBorder(
+          shape:const RoundedRectangleBorder(
             borderRadius: BorderRadius.zero, // Remove border radius
           ),
           child: Drawer(
@@ -65,19 +65,21 @@ class Dashboard extends StatelessWidget {
                       })),
                 ),
                 Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(color: Colors.green, width: 1)),
                     ),
-                    child: ListTile(title: Center(child: Text("Language")))),
+                    child:
+                        const ListTile(title: Center(child: Text("Language")))),
                 Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(color: Colors.green, width: 1)),
                     ),
-                    child: ListTile(title: Center(child: Text("Need Help")))),
+                    child: const ListTile(
+                        title: Center(child: Text("Need Help")))),
                 Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                           bottom: BorderSide(color: Colors.green, width: 1)),
                     ),
@@ -116,16 +118,16 @@ class Dashboard extends StatelessWidget {
                 children: List.generate(
                     6,
                     (idx) => const Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding:  EdgeInsets.all(8.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               CircleAvatar(
-                                child: Icon(CupertinoIcons.wand_rays, size: 40),
                                 radius: 40,
+                                child: Icon(CupertinoIcons.wand_rays, size: 40),
                               ),
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5),
                               Text("Daily Tips")
                             ],
                           ),
@@ -174,7 +176,7 @@ class Dashboard extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Colors.white,
               ),
-              child: Column(
+              child:const  Column(
                 children: [
                   // Padding(
                   //   padding: const EdgeInsets.symmetric(horizontal: 8.0),

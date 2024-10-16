@@ -85,7 +85,7 @@ class Database with ChangeNotifier {
       }
     } catch (e) {
       // Handle errors here, such as logging the error
-      print("Error adding user to chat: $e");
+      log("Error adding user to chat: $e");
     }
   }
 
@@ -117,7 +117,6 @@ class Database with ChangeNotifier {
 
         // Combine all user fetch streams for the current chatRoom into one stream
         return Rx.combineLatestList(userFetchStreams).map((fUsersList) {
-          print(fUsersList);
           return ChatUser(chatRoom: chatRoom, users: fUsersList);
         });
       });

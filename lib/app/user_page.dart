@@ -167,7 +167,7 @@ class UserPage extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                              Divider(color: Colors.black),
+                             const Divider(color: Colors.black),
                             ],
                           ),
                         )

@@ -129,7 +129,6 @@ class Auth extends ChangeNotifier {
       );
       UserCredential userCred = await _auth.signInWithCredential(cre);
       if (userCred.user != null) {
-        print(userCred.user);
       }
       load = false;
       optNow = false;
