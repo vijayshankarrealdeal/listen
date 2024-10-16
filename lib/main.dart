@@ -33,10 +33,10 @@ void main() async {
     //   kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
   );
   final navkey = GlobalKey<NavigatorState>();
+  ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navkey);
   ZegoUIKit().initLog().then((value) {
-    final service = ZegoUIKitPrebuiltCallInvitationService();
-    service.setNavigatorKey(navkey);
-    service.useSystemCallingUI([ZegoUIKitSignalingPlugin()]);
+    ZegoUIKitPrebuiltCallInvitationService()
+        .useSystemCallingUI([ZegoUIKitSignalingPlugin()]);
 
     runApp(MultiProvider(providers: [
       ChangeNotifierProvider<Auth>(create: (ctx) => Auth()),
@@ -66,24 +66,16 @@ class MyApp extends StatelessWidget {
                   userID: snapshot.data!.uid,
                   userName: auth.phoneNumber.text,
                   plugins: [ZegoUIKitSignalingPlugin()],
-                  requireConfig: (ZegoCallInvitationData data) {
-                    print(data);
-                    var config = (data.invitees.length > 1)
-                        ? ZegoCallInvitationType.videoCall == data.type
-                            ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
-                            : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
-                        : ZegoCallInvitationType.videoCall == data.type
-                            ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
-                            : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
-
-                    config
-                      ..foreground = const Positioned(
-                        top: 100,
-                        right: 20,
-                        child: CircleAvatar(),
-                      );
-                    return config;
-                  },
+                  // requireConfig: (ZegoCallInvitationData data) {
+                  //   print(data);
+                  //   var config = (data.invitees.length > 1)
+                  //       ? ZegoCallInvitationType.videoCall == data.type
+                  //           ? ZegoUIKitPrebuiltCallConfig.groupVideoCall()
+                  //           : ZegoUIKitPrebuiltCallConfig.groupVoiceCall()
+                  //       : ZegoCallInvitationType.videoCall == data.type
+                  //           ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+                  //           : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
+                  // },
                   uiConfig: ZegoCallInvitationUIConfig(
                       prebuiltWithSafeArea: true,
                       invitee: ZegoCallInvitationInviteeUIConfig(),

@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:listen/app/calls.dart';
 import 'package:listen/app/chat_screen.dart';
 import 'package:listen/models/chat_model.dart';
 import 'package:listen/routes/user_page.dart';
@@ -13,7 +12,6 @@ import 'package:listen/models/temp_data.dart';
 import 'package:listen/services/db.dart';
 import 'package:provider/provider.dart';
 import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
-import 'package:zego_uikit_signaling_plugin/zego_uikit_signaling_plugin.dart';
 
 class LiveVideo extends StatelessWidget {
   const LiveVideo({super.key});
@@ -42,7 +40,7 @@ class LiveVideo extends StatelessWidget {
         itemCount: userdataList.length,
         itemBuilder: (ctx, idx) {
           Psychologist userdata = userdataList[idx];
-          
+
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: GestureDetector(
@@ -160,11 +158,6 @@ class LiveVideo extends StatelessWidget {
                       Row(
                         children: [
                           ZegoSendCallInvitationButton(
-                            onPressed: (code, message, x) {
-                              log(message);
-                              log(code);
-                              log(x.first);
-                            },
                             borderRadius: 10,
                             isVideoCall: true,
                             resourceID: "zego_call",
@@ -173,7 +166,6 @@ class LiveVideo extends StatelessWidget {
                                 id: userdata.uid,
                                 name: userdata.name,
                               ),
-                              
                             ],
                           ),
                           IconButton(
