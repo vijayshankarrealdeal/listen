@@ -178,7 +178,7 @@ class Dashboard extends StatelessWidget {
                 color: Colors.white,
               ),
               child: StreamBuilder<List<DailyTips>>(
-                  initialData: [],
+                  initialData: const [],
                   stream: db.getDailyTips(),
                   builder: (context, snapshot) {
                     return ListView(
@@ -208,8 +208,8 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 5),
-                              Text("Daily Tips")
+                             const SizedBox(height: 5),
+                            const  Text("Daily Tips")
                             ],
                           ),
                         ),
@@ -262,7 +262,7 @@ class Dashboard extends StatelessWidget {
                 children: [
                   player,
                   TextButton(
-                      onPressed: () {}, child: Text("Watch More Videos")),
+                      onPressed: () {}, child:const Text("Watch More Videos")),
                 ],
               )
 

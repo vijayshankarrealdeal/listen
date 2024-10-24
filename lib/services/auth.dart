@@ -93,7 +93,8 @@ class Auth extends ChangeNotifier {
       _auth.verifyPhoneNumber(
           phoneNumber: phoneNum(),
           verificationCompleted: (x) async {
-            UserCredential userCred = await _auth.signInWithCredential(x);
+            await _auth.signInWithCredential(x);
+
           },
           verificationFailed: (e) {
             load = false;
