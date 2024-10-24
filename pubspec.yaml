@@ -49,16 +49,16 @@ dependencies:
   flutter_expanded_tile: ^0.4.0
   expandable_text: ^2.3.0
   animated_rating_stars: ^1.0.1
-  logger: ^2.4.0
   device_info_plus: ^11.0.0
-
-
+  searchfield: ^1.1.6
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   zego_uikit_prebuilt_call: ^4.16.8
   zego_uikit_signaling_plugin: ^2.8.5  
   zego_uikit: ^2.27.14
+  youtube_player_flutter: ^9.1.1
+  palette_generator: ^0.3.3+4
   
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,7 @@
+import 'package:listen/app/show_daily_tips.dart';
+import 'package:listen/models/daily_tips.dart';
+import 'package:listen/modules/search_text_field_logic.dart';
+import 'package:listen/modules/ytd_players.dart';
 import 'package:listen/routes/user_page.dart';
 import 'package:listen/models/user_app.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -7,12 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:listen/services/auth.dart';
 import 'package:listen/services/db.dart';
 import 'package:provider/provider.dart';
+import 'package:searchfield/searchfield.dart';
 
 class Dashboard extends StatelessWidget {
-  const Dashboard({super.key});
+  final Widget player;
+  const Dashboard({super.key, required this.player});
 
   @override
   Widget build(BuildContext context) {
+    final db = Provider.of<Database>(context, listen: false);
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
@@ -26,7 +33,7 @@ class Dashboard extends StatelessWidget {
       ),
       drawer: SafeArea(
         child: Material(
-          shape:const RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.zero, // Remove border radius
           ),
           child: Drawer(
@@ -95,15 +102,72 @@ class Dashboard extends StatelessWidget {
       ),
       body: CustomScrollView(
         slivers: [
-          const SliverToBoxAdapter(
+          SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CupertinoTextField(
-                prefix: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-                  child: Icon(CupertinoIcons.search),
-                ),
-                placeholder: "Search psychologist here",
+              padding: const EdgeInsets.all(8.0),
+              child: ChangeNotifierProvider<SearchTextFieldLogic>(
+                create: (ctx) => SearchTextFieldLogic(),
+                child: Consumer<SearchTextFieldLogic>(
+                    builder: (context, logic, _) {
+                  return SearchField<FUsers>(
+                    onSuggestionTap: (e) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => UserPage(
+                            user: e.item,
+                            psychologist: null,
+                          ),
+                        ),
+                      );
+                    },
+                    hint: logic.controller.text.isEmpty
+                        ? "Search"
+                        : logic.controller.text,
+                    onTapOutside: (p) {
+                      logic.removefromSearchArea(context);
+                    },
+                    controller: logic.controller,
+                    onSearchTextChanged: (a) {
+                      logic.onChanged(db, a);
+                      return logic.users
+                          .map(
+                            (e) => SearchFieldListItem(
+                              e.name,
+                              item: e,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  radius: 25,
+                                  backgroundImage: CachedNetworkImageProvider(
+                                      e.displayProfile),
+                                ),
+                                title: Text(e.name),
+                              ),
+                            ),
+                          )
+                          .toList();
+                    },
+                    dynamicHeight: true,
+                    maxSuggestionBoxHeight:
+                        MediaQuery.of(context).size.height * 0.3,
+                    suggestions: logic.users
+                        .map(
+                          (e) => SearchFieldListItem(
+                            e.name,
+                            item: e,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                radius: 25,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    e.displayProfile),
+                              ),
+                              title: Text(e.name),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  );
+                }),
               ),
             ),
           ),
@@ -113,26 +177,45 @@ class Dashboard extends StatelessWidget {
               decoration: const BoxDecoration(
                 color: Colors.white,
               ),
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: List.generate(
-                    6,
-                    (idx) => const Padding(
-                          padding:  EdgeInsets.all(8.0),
+              child: StreamBuilder<List<DailyTips>>(
+                  initialData: [],
+                  stream: db.getDailyTips(),
+                  builder: (context, snapshot) {
+                    return ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(
+                        snapshot.data!.length,
+                        (idx) => Padding(
+                          padding: const EdgeInsets.all(8.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              CircleAvatar(
-                                radius: 40,
-                                child: Icon(CupertinoIcons.wand_rays, size: 40),
+                              GestureDetector(
+                                onTap: () => Navigator.push(
+                                  context, // Pass the context directly here
+                                  MaterialPageRoute(
+                                    builder: (context) => ShowDailyTips(
+                                        todayTip: snapshot.data![idx]),
+                                  ), // Correct parameter passing
+                                ),
+                                child: CircleAvatar(
+                                  radius: 40,
+                                  child: CircleAvatar(
+                                    backgroundImage: CachedNetworkImageProvider(
+                                        snapshot.data![idx].imageUrl),
+                                    radius: 37,
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 5),
                               Text("Daily Tips")
                             ],
                           ),
-                        )),
-              ),
+                        ),
+                      ),
+                    );
+                  }),
             ),
           ),
           SliverPadding(
@@ -170,58 +253,61 @@ class Dashboard extends StatelessWidget {
                   });
             })),
           ),
-          SliverToBoxAdapter(
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-              ),
-              child:const  Column(
+          Consumer<YtdPlayers>(
+            builder: (context, ytd, _) {
+              return SliverToBoxAdapter(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     crossAxisAlignment: CrossAxisAlignment.center,
-                  //     children: [
-                  //       const Text("Live Psycologist"),
-                  //       TextButton(
-                  //           onPressed: () => Navigator.push(
-                  //               context,
-                  //               MaterialPageRoute(
-                  //                   builder: (ctx) =>
-                  //                       ViewAllPsy(imges: images))),
-                  //           child: const Text("View All")),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Expanded(
-                  //   child: ListView(
-                  //     scrollDirection: Axis.horizontal,
-                  //     children: List.generate(
-                  //         6,
-                  //         (idx) => Padding(
-                  //               padding: const EdgeInsets.symmetric(
-                  //                   horizontal: 8.0, vertical: 8.0),
-                  //               child: Container(
-                  //                 height:
-                  //                     MediaQuery.of(context).size.height * 0.1,
-                  //                 width:
-                  //                     MediaQuery.of(context).size.height * 0.18,
-                  //                 decoration: BoxDecoration(
-                  //                     image: DecorationImage(
-                  //                         image: CachedNetworkImageProvider(
-                  //                             images[idx]),
-                  //                         fit: BoxFit.cover),
-                  //                     borderRadius: BorderRadius.circular(15)),
-                  //               ),
-                  //             )),
-                  //   ),
-                  // ),
+                  player,
+                  TextButton(
+                      onPressed: () {}, child: Text("Watch More Videos")),
                 ],
-              ),
-            ),
-          )
+              )
+
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: SizedBox(
+                  //     height: MediaQuery.of(context).size.height * 0.4,
+                  //     child: PageView.builder(
+                  //       onPageChanged: (index) {
+                  //         ytd.setPage(index);
+                  //       },
+                  //       itemCount: ytd.ids.length,
+                  //       controller: ytd.controller,
+                  //       scrollDirection: Axis.horizontal,
+                  //       itemBuilder: (ctx, idx) {
+                  //         return Container(
+                  //           decoration: BoxDecoration(
+                  //               borderRadius: BorderRadius.circular(12),
+                  //               color: Colors.green.shade100),
+                  //           child: Column(
+                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //             crossAxisAlignment: CrossAxisAlignment.end,
+                  //             children: [
+                  //               AspectRatio(
+                  //                   aspectRatio: 16 / 9,
+                  //                   child: ClipRRect(child: player)),
+                  //               IconButton(
+                  //                   onPressed: () => ytd.nextPage(ytd.ids.length),
+                  //                   icon: const Icon(
+                  //                       CupertinoIcons.chevron_right_circle_fill,
+                  //                       size: 50,
+                  //                       color: Colors.green)),
+                  //             ],
+                  //           ),
+                  //         );
+                  //       },
+                  //     ),
+                  //   ),
+                  // ),
+                  );
+            },
+          ),
+          SliverToBoxAdapter(
+              child:
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.05))
         ],
       ),
     );

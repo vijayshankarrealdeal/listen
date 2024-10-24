@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:listen/widgets/error_widget.dart';
-import 'package:logger/logger.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +10,6 @@ class Auth extends ChangeNotifier {
   Auth() {
     _getData();
   }
-  var logger = Logger();
   final _auth = FirebaseAuth.instance;
   Stream<User?> authState() => _auth.authStateChanges();
   List<Coun> country = [];
@@ -96,7 +94,6 @@ class Auth extends ChangeNotifier {
           phoneNumber: phoneNum(),
           verificationCompleted: (x) async {
             UserCredential userCred = await _auth.signInWithCredential(x);
-            logger.d(userCred);
           },
           verificationFailed: (e) {
             load = false;

@@ -6,6 +6,7 @@ import 'package:listen/homepage_app.dart';
 import 'package:listen/login/login.dart';
 import 'package:listen/models/user_app.dart';
 import 'package:listen/modules/color_mode.dart';
+import 'package:listen/modules/search_text_field_logic.dart';
 import 'package:listen/services/auth.dart';
 import 'package:listen/services/db.dart';
 import 'package:listen/services/navbar_logic.dart';
@@ -27,14 +28,13 @@ void main() async {
         storageBucket: "listen-57bf4.appspot.com",
         projectId: "listen-57bf4"),
   );
-  await FirebaseAppCheck.instance.activate(
-    webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
-    androidProvider: AndroidProvider.debug,
-    //   kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
-  );
-  var k = await FirebaseAppCheck.instance.getToken();
-  log(k.toString());
-  
+  // await FirebaseAppCheck.instance.activate(
+  //   webProvider: ReCaptchaV3Provider('recaptcha-v3-site-key'),
+  //   androidProvider: AndroidProvider.debug,
+  //   //   kDebugMode ? AndroidProvider.debug : AndroidProvider.playIntegrity,
+  // );
+  // var k = await FirebaseAppCheck.instance.getToken();
+  // log(k.toString());
 
   final navkey = GlobalKey<NavigatorState>();
   ZegoUIKitPrebuiltCallInvitationService().setNavigatorKey(navkey);
@@ -57,114 +57,111 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-
-    return Consumer<Auth>(builder: (context, auth, _) {
-      return StreamBuilder<User?>(
-          stream: auth.authState(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              ZegoUIKitPrebuiltCallInvitationService().init(
-                  appID: 1491639421 /*input your AppID*/,
-                  appSign:
-                      "f6b11adcf1935b18e25836bc428e3e48e7f89cf49e5d7092f2c9bf2d2df97572" /*input your AppSign*/,
-                  userID: snapshot.data!.uid,
-                  userName: auth.phoneNumber.text,
-                  plugins: [ZegoUIKitSignalingPlugin()],
-                  uiConfig: ZegoCallInvitationUIConfig(
-                      prebuiltWithSafeArea: true,
-                      invitee: ZegoCallInvitationInviteeUIConfig(),
-                      inviter: ZegoCallInvitationInviterUIConfig()));
-              return MultiProvider(
-                providers: [
-                  ChangeNotifierProvider(
-                    create: (ctx) => Database(
-                        phoneNum: auth.phoneNumber.text,
-                        currentUseruid: snapshot.data!.uid),
-                  ),
-                ],
-                child: Consumer<Database>(builder: (context, db, _) {
-                  return MaterialApp(
-                    navigatorKey: navKey,
-                    debugShowCheckedModeBanner: false,
-                    theme: ThemeData(
-                      textTheme:
-                          GoogleFonts.ptSansTextTheme(textTheme).copyWith(
-                        bodyLarge:
-                            GoogleFonts.ptSerif(textStyle: textTheme.bodyLarge),
-                        headlineLarge: GoogleFonts.ptSerif(
-                            textStyle: textTheme.headlineLarge),
-                        headlineMedium: GoogleFonts.ptSerif(
-                            textStyle: textTheme.headlineMedium),
-                        displayLarge: GoogleFonts.ptSerif(
-                            textStyle: textTheme.displayLarge),
-                        displaySmall: GoogleFonts.ptSerif(
-                            textStyle: textTheme.displaySmall),
-                        bodyMedium: GoogleFonts.ptSerif(
-                            textStyle: textTheme.bodyMedium),
-                      ),
-                      colorScheme: ColorScheme.fromSeed(
-                          seedColor: Colors.greenAccent,
-                          primary: Colors.green,
-                          brightness: Brightness.light),
-                      useMaterial3: true,
-                    ),
-                    home: StreamBuilder<FUsers>(
-                      stream: db.getUser(
-                          db.currentUseruid), // The stream from Firebase
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Scaffold(
-                            body: Center(child: CircularProgressIndicator()),
-                          );
-                        } else if (snapshot.hasData) {
-                          return snapshot.data!.uid.isEmpty
-                              ? const Onboard()
-                              : Provider<FUsers>.value(
-                                  value: snapshot.data!,
-                                  child:
-                                      const ZegoUIKitPrebuiltCallMiniPopScope(
-                                    child: HomePage(),
-                                  ),
-                                );
-                        } else {
-                          return const Scaffold(
-                            body:
-                                Center(child: Text("Something Went Wrong :(")),
-                          );
-                        }
-                      },
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (ctx) => Database(
+              phoneNum: "9999787803",
+              currentUseruid: "DNQpHS8nbWTgQRoXpJ03GTp6Gar2"),
+        ),
+      ],
+      child: Consumer<Database>(builder: (context, db, _) {
+        return MaterialApp(
+          navigatorKey: navKey,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            textTheme: GoogleFonts.ptSansTextTheme(textTheme).copyWith(
+              bodyLarge: GoogleFonts.ptSerif(textStyle: textTheme.bodyLarge),
+              headlineLarge:
+                  GoogleFonts.ptSerif(textStyle: textTheme.headlineLarge),
+              headlineMedium:
+                  GoogleFonts.ptSerif(textStyle: textTheme.headlineMedium),
+              displayLarge:
+                  GoogleFonts.ptSerif(textStyle: textTheme.displayLarge),
+              displaySmall:
+                  GoogleFonts.ptSerif(textStyle: textTheme.displaySmall),
+              bodyMedium: GoogleFonts.ptSerif(textStyle: textTheme.bodyMedium),
+            ),
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.greenAccent,
+                primary: Colors.green,
+                brightness: Brightness.light),
+            useMaterial3: true,
+          ),
+          home: StreamBuilder<FUsers>(
+            stream: db.getUser(db.currentUseruid), // The stream from Firebase
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Scaffold(
+                  body: Center(child: CircularProgressIndicator()),
+                );
+              } else if (snapshot.hasData) {
+                if (snapshot.data!.uid.isEmpty) {
+                  return const Onboard();
+                } else {
+                  ZegoUIKitPrebuiltCallInvitationService().init(
+                      appID: 1491639421 /*input your AppID*/,
+                      appSign:
+                          "f6b11adcf1935b18e25836bc428e3e48e7f89cf49e5d7092f2c9bf2d2df97572" /*input your AppSign*/,
+                      userID: snapshot.data!.uid,
+                      userName: snapshot.data!.name,
+                      plugins: [ZegoUIKitSignalingPlugin()],
+                      uiConfig: ZegoCallInvitationUIConfig(
+                          prebuiltWithSafeArea: true,
+                          // invitee: ZegoCallInvitationInviteeUIConfig(),
+                          // inviter: ZegoCallInvitationInviterUIConfig()
+                          
+                          ));
+                  return Provider<FUsers>.value(
+                    value: snapshot.data!,
+                    child:const HomePage(
+                 
                     ),
                   );
-                }),
-              );
-            } else {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  textTheme: GoogleFonts.ptSansTextTheme(textTheme).copyWith(
-                    bodyLarge:
-                        GoogleFonts.ptSerif(textStyle: textTheme.bodyLarge),
-                    headlineLarge:
-                        GoogleFonts.ptSerif(textStyle: textTheme.headlineLarge),
-                    headlineMedium: GoogleFonts.ptSerif(
-                        textStyle: textTheme.headlineMedium),
-                    displayLarge:
-                        GoogleFonts.ptSerif(textStyle: textTheme.displayLarge),
-                    displaySmall:
-                        GoogleFonts.ptSerif(textStyle: textTheme.displaySmall),
-                    bodyMedium:
-                        GoogleFonts.ptSerif(textStyle: textTheme.bodyMedium),
-                  ),
-                  colorScheme: ColorScheme.fromSeed(
-                      seedColor: Colors.green.shade900,
-                      brightness: Brightness.light),
-                  useMaterial3: true,
-                ),
-                home: const HelloScreen(),
-              );
-            }
-          });
-    });
+                }
+              } else {
+                return const Scaffold(
+                  body: Center(child: Text("Something Went Wrong :(")),
+                );
+              }
+            },
+          ),
+        );
+      }),
+    );
+    // return Consumer<Auth>(builder: (context, auth, _) {
+    //   return StreamBuilder<User?>(
+    //       stream: auth.authState(),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.hasData) {
+
+    //         } else {
+    //           return MaterialApp(
+    //             debugShowCheckedModeBanner: false,
+    //             theme: ThemeData(
+    //               textTheme: GoogleFonts.ptSansTextTheme(textTheme).copyWith(
+    //                 bodyLarge:
+    //                     GoogleFonts.ptSerif(textStyle: textTheme.bodyLarge),
+    //                 headlineLarge:
+    //                     GoogleFonts.ptSerif(textStyle: textTheme.headlineLarge),
+    //                 headlineMedium: GoogleFonts.ptSerif(
+    //                     textStyle: textTheme.headlineMedium),
+    //                 displayLarge:
+    //                     GoogleFonts.ptSerif(textStyle: textTheme.displayLarge),
+    //                 displaySmall:
+    //                     GoogleFonts.ptSerif(textStyle: textTheme.displaySmall),
+    //                 bodyMedium:
+    //                     GoogleFonts.ptSerif(textStyle: textTheme.bodyMedium),
+    //               ),
+    //               colorScheme: ColorScheme.fromSeed(
+    //                   seedColor: Colors.green.shade900,
+    //                   brightness: Brightness.light),
+    //               useMaterial3: true,
+    //             ),
+    //             home: const HelloScreen(),
+    //           );
+    //         }
+    //       });
+    // });
   }
 }

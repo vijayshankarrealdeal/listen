@@ -355,9 +355,9 @@ class Psychologist {
     return Psychologist(
       uid: json['uid'],
       name: json['name'],
-      psychologistTitle: json['psychologist_title'],
-      specialization: json['specialization'],
-      yearsOfExperience: json['years_of_experience'],
+      psychologistTitle: json['psychologist_title'] ?? "",
+      specialization: json['specialization'] ?? "",
+      yearsOfExperience: json['years_of_experience'] ?? 0,
       languagesSpoken: List<String>.from(json['languages_spoken']),
       displayProfile: json['displayProfile'],
       ratingsReviews: RatingsReviews.fromJson(json['ratings_reviews']),

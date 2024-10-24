@@ -117,7 +117,7 @@ class LiveVideo extends StatelessWidget {
                         customHalfFilledIcon: Icons.star_half,
                         customEmptyIcon: Icons.star_border,
                         starSize: 10.0,
-                        animationDuration:const Duration(milliseconds: 300),
+                        animationDuration: const Duration(milliseconds: 300),
                         animationCurve: Curves.easeInOut,
                         readOnly: true,
                       ),
@@ -157,16 +157,23 @@ class LiveVideo extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          ZegoSendCallInvitationButton(
-                            borderRadius: 10,
-                            isVideoCall: true,
-                            resourceID: "zego_call",
-                            invitees: [
-                              ZegoUIKitUser(
-                                id: userdata.uid,
-                                name: userdata.name,
-                              ),
-                            ],
+                          GestureDetector(
+                            child: ZegoSendCallInvitationButton(
+                              onPressed: (a, b, c) {
+                                inactiveDb.addTocallLogs(
+                                    "${userdata.uid}-${inactiveDb.currentUseruid}",
+                                    [inactiveDb.currentUseruid, userdata.uid]);
+                              },
+                              borderRadius: 10,
+                              isVideoCall: true,
+                              resourceID: "zego_call",
+                              invitees: [
+                                ZegoUIKitUser(
+                                  id: userdata.uid,
+                                  name: userdata.name,
+                                ),
+                              ],
+                            ),
                           ),
                           IconButton(
                             icon: Icon(CupertinoIcons.chat_bubble_2,

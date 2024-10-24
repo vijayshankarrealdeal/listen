@@ -30,6 +30,13 @@ class ChatDetail extends StatelessWidget {
           ),
           actions: [
             ZegoSendCallInvitationButton(
+              onPressed: (a, b, c) {
+                String otherUseruid = uids
+                    .where((x) => x.compareTo(db.currentUseruid) != 0)
+                    .first;
+                db.addTocallLogs("$otherUseruid-${db.currentUseruid}",
+                    [db.currentUseruid, otherUseruid]);
+              },
               borderRadius: 1,
               iconSize: const Size(30, 30),
               isVideoCall: true,
