@@ -1,7 +1,6 @@
 import 'package:listen/app/show_daily_tips.dart';
 import 'package:listen/models/daily_tips.dart';
 import 'package:listen/modules/search_text_field_logic.dart';
-import 'package:listen/modules/ytd_players.dart';
 import 'package:listen/routes/user_page.dart';
 import 'package:listen/models/user_app.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,10 +11,10 @@ import 'package:listen/services/auth.dart';
 import 'package:listen/services/db.dart';
 import 'package:provider/provider.dart';
 import 'package:searchfield/searchfield.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatelessWidget {
-  final Widget player;
-  const Dashboard({super.key, required this.player});
+  const Dashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,11 +23,20 @@ class Dashboard extends StatelessWidget {
       backgroundColor: Colors.grey.shade200,
       appBar: AppBar(
         title: const Text("Listengloom"),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: Icon(CupertinoIcons.bell),
-          ),
+        actions: [
+          Consumer<FUsers>(builder: (context, user, _) {
+            return IconButton(
+                onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (ctx) => UserPage(
+                                user: user,
+                                psychologist: null,
+                              )),
+                    ),
+                icon: const Icon(CupertinoIcons.person_alt_circle,
+                    color: Colors.green));
+          }),
         ],
       ),
       drawer: SafeArea(
@@ -71,13 +79,13 @@ class Dashboard extends StatelessWidget {
                                 const Center(child: Text("Personal Details")));
                       })),
                 ),
-                Container(
-                    decoration: const BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.green, width: 1)),
-                    ),
-                    child:
-                        const ListTile(title: Center(child: Text("Language")))),
+                // Container(
+                //     decoration: const BoxDecoration(
+                //       border: Border(
+                //           bottom: BorderSide(color: Colors.green, width: 1)),
+                //     ),
+                //     child:
+                //         const ListTile(title: Center(child: Text("Language")))),
                 Container(
                     decoration: const BoxDecoration(
                       border: Border(
@@ -178,7 +186,13 @@ class Dashboard extends StatelessWidget {
                 color: Colors.white,
               ),
               child: StreamBuilder<List<DailyTips>>(
-                  initialData: const [],
+                  initialData: List.generate(
+                    (7),
+                    (e) => DailyTips(
+                        imageUrl: "https://vectorified.com/images/grey-circle-icon-26.jpg",
+                        color: Colors.green,
+                        text: "Loading"),
+                  ),
                   stream: db.getDailyTips(),
                   builder: (context, snapshot) {
                     return ListView(
@@ -208,8 +222,8 @@ class Dashboard extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                             const SizedBox(height: 5),
-                            const  Text("Daily Tips")
+                              const SizedBox(height: 5),
+                              const Text("Daily Tips")
                             ],
                           ),
                         ),
@@ -232,6 +246,7 @@ class Dashboard extends StatelessWidget {
                   builder: (context, snapshot) {
                     return CarouselSlider(
                       options: CarouselOptions(
+                        autoPlay: true,
                         viewportFraction: 0.88,
                         enlargeCenterPage: true,
                         enlargeFactor: 0.2,
@@ -253,57 +268,43 @@ class Dashboard extends StatelessWidget {
                   });
             })),
           ),
-          Consumer<YtdPlayers>(
-            builder: (context, ytd, _) {
-              return SliverToBoxAdapter(
-                  child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  player,
-                  TextButton(
-                      onPressed: () {}, child:const Text("Watch More Videos")),
-                ],
-              )
-
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: SizedBox(
-                  //     height: MediaQuery.of(context).size.height * 0.4,
-                  //     child: PageView.builder(
-                  //       onPageChanged: (index) {
-                  //         ytd.setPage(index);
-                  //       },
-                  //       itemCount: ytd.ids.length,
-                  //       controller: ytd.controller,
-                  //       scrollDirection: Axis.horizontal,
-                  //       itemBuilder: (ctx, idx) {
-                  //         return Container(
-                  //           decoration: BoxDecoration(
-                  //               borderRadius: BorderRadius.circular(12),
-                  //               color: Colors.green.shade100),
-                  //           child: Column(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //             crossAxisAlignment: CrossAxisAlignment.end,
-                  //             children: [
-                  //               AspectRatio(
-                  //                   aspectRatio: 16 / 9,
-                  //                   child: ClipRRect(child: player)),
-                  //               IconButton(
-                  //                   onPressed: () => ytd.nextPage(ytd.ids.length),
-                  //                   icon: const Icon(
-                  //                       CupertinoIcons.chevron_right_circle_fill,
-                  //                       size: 50,
-                  //                       color: Colors.green)),
-                  //             ],
-                  //           ),
-                  //         );
-                  //       },
-                  //     ),
-                  //   ),
-                  // ),
-                  );
-            },
+          SliverToBoxAdapter(
+            child: CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: false,
+                viewportFraction: 0.88,
+                enlargeCenterPage: false,
+                enlargeFactor: 0.6,
+                height: MediaQuery.of(context).size.height * 0.3,
+              ),
+              items: [
+                "TkYiJdwblQM",
+                "lDUZrXmb6P4",
+                "1vXAhc7lfQU",
+                "u5qoSoaWsOE",
+              ].map((i) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      launchUrl(
+                          Uri.parse("https://www.youtube.com/watch?v=$i"));
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: CachedNetworkImageProvider(
+                                'https://img.youtube.com/vi/$i/0.jpg')),
+                        borderRadius: BorderRadius.circular(12),
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
           ),
           SliverToBoxAdapter(
               child:

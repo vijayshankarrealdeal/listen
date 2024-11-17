@@ -46,25 +46,25 @@ class Onboard extends StatelessWidget {
                       hintText: 'Enter Name',
                     ),
                   ),
-                  DropDownSearchField(
-                    textFieldConfiguration: TextFieldConfiguration(
-                        enabled: !fbsum.load,
-                        controller: fbsum.role,
-                        decoration:
-                            const InputDecoration(hintText: 'Select you role')),
-                    suggestionsCallback: (pattern) {
-                      return ["User", "Psycologist"];
-                    },
-                    itemBuilder: (context, suggestion) {
-                      return ListTile(
-                        title: Text(suggestion),
-                      );
-                    },
-                    onSuggestionSelected: (suggestion) {
-                      fbsum.role.text = suggestion;
-                    },
-                    displayAllSuggestionWhenTap: true,
-                  ),
+                  // DropDownSearchField(
+                  //   textFieldConfiguration: TextFieldConfiguration(
+                  //       enabled: !fbsum.load,
+                  //       controller: fbsum.role,
+                  //       decoration:
+                  //           const InputDecoration(hintText: 'Select you role')),
+                  //   suggestionsCallback: (pattern) {
+                  //     return ["User", "Psycologist"];
+                  //   },
+                  //   itemBuilder: (context, suggestion) {
+                  //     return ListTile(
+                  //       title: Text(suggestion),
+                  //     );
+                  //   },
+                  //   onSuggestionSelected: (suggestion) {
+                  //     fbsum.role.text = suggestion;
+                  //   },
+                  //   displayAllSuggestionWhenTap: true,
+                  // ),
                   DropDownSearchField(
                     textFieldConfiguration: TextFieldConfiguration(
                         enabled: !fbsum.load,

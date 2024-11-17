@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:listen/widgets/error_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class Auth extends ChangeNotifier {
   TextEditingController phoneNumber = TextEditingController();
   PincodeInputFieldsController valCon = PincodeInputFieldsController();
   TextEditingController searchText = TextEditingController();
-
+  bool circleload = false;
   String verid = "";
   String searchRes = '';
   String cpuntryDefautl = '+91';
@@ -94,7 +95,6 @@ class Auth extends ChangeNotifier {
           phoneNumber: phoneNum(),
           verificationCompleted: (x) async {
             await _auth.signInWithCredential(x);
-
           },
           verificationFailed: (e) {
             load = false;
@@ -126,8 +126,7 @@ class Auth extends ChangeNotifier {
         smsCode: code,
       );
       UserCredential userCred = await _auth.signInWithCredential(cre);
-      if (userCred.user != null) {
-      }
+      if (userCred.user != null) {}
       load = false;
       optNow = false;
       valCon.clear();
@@ -136,6 +135,37 @@ class Auth extends ChangeNotifier {
     } catch (e) {
       load = false;
     }
+  }
+
+  Future<void> signIn(String email, String password) async {
+    await _auth.signInWithEmailAndPassword(email: email, password: password);
+  }
+
+  Future<void> signUp(String email, String password) async {
+    await _auth.createUserWithEmailAndPassword(
+        email: email, password: password);
+  }
+
+  Future<void> signInWithGoogle() async {
+    circleload = true;
+    notifyListeners();
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await googleSignIn.signIn();
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount!.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      circleload = false;
+    } catch (e) {
+      circleload = false;
+    }
+    notifyListeners();
   }
 }
 

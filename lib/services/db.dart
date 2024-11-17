@@ -14,7 +14,7 @@ import 'package:palette_generator/palette_generator.dart';
 
 class Database with ChangeNotifier {
   final String currentUseruid;
-  final String phoneNum;
+  String phoneNum;
   final FirebaseFirestore _ref = FirebaseFirestore.instance;
 
   bool load = false;
@@ -122,8 +122,7 @@ class Database with ChangeNotifier {
     });
   }
 
-  Future<Color> _getDominantColorFromImage(
-      String imageUrl) async {
+  Future<Color> _getDominantColorFromImage(String imageUrl) async {
     final paletteGenerator = await PaletteGenerator.fromImageProvider(
       NetworkImage(imageUrl),
     );
@@ -138,6 +137,9 @@ class Database with ChangeNotifier {
         .where('uids', arrayContains: currentUseruid)
         .snapshots()
         .flatMap((snapshot) {
+      if (snapshot.docs.isEmpty) {
+        return Stream.value([]); // Return an empty list if no documents
+      }
       // Map each document to a CallLogs object along with the corresponding user info
       final List<Stream<CallLogs>> callLogStreams = snapshot.docs.map((eData) {
         final List<String> uids = List<String>.from(eData.data()['uids']);

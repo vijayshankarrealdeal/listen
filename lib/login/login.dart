@@ -401,6 +401,50 @@ class HelloScreen extends StatelessWidget {
                                       ),
                                     ),
                                   ),
+                            const SizedBox(height: 5),
+                            auth.circleload
+                                ? const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      auth.signInWithGoogle();
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.065,
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade900,
+                                        borderRadius: BorderRadius.circular(18),
+                                      ),
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Spacer(),
+                                          Text(
+                                            "Sign In with Google",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 17,
+                                            ),
+                                          ),
+                                          Spacer(),
+                                          Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Icon(
+                                                CupertinoIcons.forward,
+                                                color: Colors.white,
+                                              )),
+                                          SizedBox(width: 5),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                           ]),
                     ),
                   ));

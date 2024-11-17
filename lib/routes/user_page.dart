@@ -15,10 +15,42 @@ class UserPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body: psychologist == null
-          ? Column(
-              children: [
-                Text(user!.name),
-              ],
+          ? Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  CircleAvatar(
+                      backgroundImage:
+                          CachedNetworkImageProvider(user!.displayProfile),
+                      radius: 100),
+                  TextFormField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: user!.name,
+                    ),
+                  ),
+                  TextFormField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: {"F": "Female", "M": "Male"}[user!.gender],
+                    ),
+                  ),
+                  TextFormField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: user!.email,
+                    ),
+                  ),
+                  TextFormField(
+                    enabled: false,
+                    decoration: InputDecoration(
+                      hintText: user!.dob.toDate().toString().substring(0, 10),
+                    ),
+                  ),
+                ],
+              ),
             )
           : Padding(
               padding: const EdgeInsets.all(8.0),

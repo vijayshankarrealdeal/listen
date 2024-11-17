@@ -51,10 +51,15 @@ class FormSubmit extends ChangeNotifier {
     } else if (dobController.text.isEmpty) {
       errorAlert(context, "Enter valid date");
       return;
-    } else if (role.text.isEmpty) {
-      errorAlert(context, "You must select a role.");
-      return;
-    } else if (email.text.isNotEmpty && !isValidEmail(email.text)) {
+    }
+
+    // else if (role.text.isEmpty) {
+
+    //   errorAlert(context, "You must select a role.");
+    //   return;
+    // }
+
+    else if (email.text.isNotEmpty && !isValidEmail(email.text)) {
       errorAlert(context, "You must enter valid email.");
       return;
     }
@@ -71,7 +76,7 @@ class FormSubmit extends ChangeNotifier {
       gender: mapper[cont.text],
       email: email.text,
       dob: timestamp,
-      role: mapper[role.text],
+      role: "User",
       displayProfile: displayProfile,
       fmcToken: token ?? "",
     );
