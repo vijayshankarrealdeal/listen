@@ -93,7 +93,7 @@ class Wallet extends StatelessWidget {
                 const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [Center(child: Text("No transactions to show"))],
+                  children: [Center(child: Text("The app is free for your first sign-up."))],
                 )
               ],
             ),

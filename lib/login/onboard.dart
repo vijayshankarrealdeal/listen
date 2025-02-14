@@ -81,7 +81,7 @@ class Onboard extends StatelessWidget {
                     onSuggestionSelected: (suggestion) {
                       fbsum.cont.text = suggestion;
                     },
-                    displayAllSuggestionWhenTap: true,
+                    displayAllSuggestionWhenTap: true, isMultiSelectDropdown: false,
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height * 0.002),
                   TextFormField(

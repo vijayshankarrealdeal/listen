@@ -38,7 +38,8 @@ class LiveVideo extends StatelessWidget {
           body: ListView.separated(
             separatorBuilder: (ctx, idx) {
               return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
                 child: Divider(
                   color:
                       Colors.green.shade200, // Change color as per your design
@@ -49,9 +50,9 @@ class LiveVideo extends StatelessWidget {
             itemCount: userdataList.length,
             itemBuilder: (ctx, idx) {
               Psychologist userdata = userdataList[idx];
-
               return Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
                 child: GestureDetector(
                   onTap: () => Navigator.push(
                       context,
@@ -67,12 +68,45 @@ class LiveVideo extends StatelessWidget {
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          CircleAvatar(
-                            radius: 50,
-                            backgroundImage: CachedNetworkImageProvider(
-                                userdata.displayProfile),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                radius: 44,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    userdata.displayProfile),
+                              ),
+                              const SizedBox(height: 2),
+                              Row(
+                                children: [
+                                  Text(
+                                      "${userdata.ratingsReviews.averageRating.toString()} "),
+                                  AnimatedRatingStars(
+                                    initialRating:
+                                        userdata.ratingsReviews.averageRating,
+                                    onChanged: (double rating) {},
+                                    filledColor: CupertinoColors.activeGreen,
+                                    emptyColor: Colors.grey,
+                                    filledIcon: Icons.star,
+                                    halfFilledIcon: Icons.star_half,
+                                    emptyIcon: Icons.star_border,
+                                    displayRatingValue: true,
+                                    interactiveTooltips: true,
+                                    customFilledIcon: Icons.star,
+                                    customHalfFilledIcon: Icons.star_half,
+                                    customEmptyIcon: Icons.star_border,
+                                    starSize: 10.0,
+                                    animationDuration:
+                                        const Duration(milliseconds: 300),
+                                    animationCurve: Curves.easeInOut,
+                                    readOnly: true,
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                           const SizedBox(width: 15),
                           Column(
@@ -81,8 +115,7 @@ class LiveVideo extends StatelessWidget {
                             children: [
                               Text(
                                 userdata.name,
-                                style:
-                                    Theme.of(context).textTheme.headlineSmall,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
                                 "Specialization",
@@ -101,44 +134,26 @@ class LiveVideo extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.of(context).size.width * 0.5,
                                 child: ExpandableText(
-                                    userdata.psychologistTitle,
-                                    maxLines: 2,
-                                    expandText: ""),
+                                  userdata.psychologistTitle,
+                                  maxLines: 2,
+                                  expandText: "",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(color: Colors.black),
+                                ),
                               ),
                               Text(
-                                  "${userdata.yearsOfExperience.toString()} Year Of Experience"),
+                                "${userdata.yearsOfExperience.toString()} Year Of Experience",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium!
+                                    .copyWith(color: Colors.black),
+                              ),
                             ],
                           ),
                         ],
                       ),
-                      Row(
-                        children: [
-                          Text(
-                              "${userdata.ratingsReviews.averageRating.toString()} "),
-                          AnimatedRatingStars(
-                            initialRating:
-                                userdata.ratingsReviews.averageRating,
-                            onChanged: (double rating) {},
-                            filledColor: CupertinoColors.activeGreen,
-                            emptyColor: Colors.grey,
-                            filledIcon: Icons.star,
-                            halfFilledIcon: Icons.star_half,
-                            emptyIcon: Icons.star_border,
-                            displayRatingValue: true,
-                            interactiveTooltips: true,
-                            customFilledIcon: Icons.star,
-                            customHalfFilledIcon: Icons.star_half,
-                            customEmptyIcon: Icons.star_border,
-                            starSize: 10.0,
-                            animationDuration:
-                                const Duration(milliseconds: 300),
-                            animationCurve: Curves.easeInOut,
-                            readOnly: true,
-                          ),
-                          Divider(color: Colors.green.shade400, thickness: 1),
-                        ],
-                      ),
-                      // const SizedBox(height: 15),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,14 +170,15 @@ class LiveVideo extends StatelessWidget {
                                     .copyWith(color: Colors.grey),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: userdata.languagesSpoken
                                     .map((x) => Text(
                                           "$x ",
                                           style: Theme.of(context)
                                               .textTheme
-                                              .labelMedium!
+                                              .labelSmall!
                                               .copyWith(color: Colors.black),
                                         ))
                                     .toList(),
@@ -170,6 +186,8 @@ class LiveVideo extends StatelessWidget {
                             ],
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               GestureDetector(
                                 child: ZegoSendCallInvitationButton(
@@ -181,7 +199,12 @@ class LiveVideo extends StatelessWidget {
                                           userdata.uid
                                         ]);
                                   },
-                                  borderRadius: 10,
+                                  verticalLayout: false,
+                                  margin: EdgeInsets.zero,
+                                  padding: EdgeInsets.zero,
+                                  borderRadius: 0,
+                                  buttonSize: const Size(35, 35),
+                                  iconSize: const Size(35, 35),
                                   isVideoCall: true,
                                   resourceID: "zego_call",
                                   invitees: [
@@ -194,7 +217,7 @@ class LiveVideo extends StatelessWidget {
                               ),
                               IconButton(
                                 icon: Icon(CupertinoIcons.chat_bubble_2,
-                                    size: 38, color: Colors.green.shade600),
+                                    size: 35, color: Colors.green.shade600),
                                 onPressed: () {
                                   try {
                                     inactiveDb.addUserToChat(ChatRoom(

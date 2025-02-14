@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:listen/app/chat_screen.dart';
 import 'package:listen/models/call_logs.dart';
 import 'package:listen/models/chat_user.dart';
@@ -181,13 +182,57 @@ class Chat extends StatelessWidget {
                                                 ),
                                                 title: Text(snapshot
                                                     .data![idx].user.name),
-                                                subtitle: Text(timeago.format(
+                                                subtitle: Text("${timeago.format(
                                                     snapshot.data![idx].callTime
                                                         .first
-                                                        .toDate())),
-                                                trailing: Text(snapshot
-                                                    .data![idx].callCount
-                                                    .toString()),
+                                                        .toDate())},  ${snapshot
+                                                        .data![idx].callCount
+                                                        .toString()} calls"),
+                                                trailing: ZegoSendCallInvitationButton(
+                                                  buttonSize:
+                                                      const Size(35, 35),
+                                                  onPressed: (a, b, c) {
+                                                    inactivedb.addTocallLogs(
+                                                        "${snapshot.data![idx].user.uid}-${inactivedb.currentUseruid}",
+                                                        [
+                                                          inactivedb
+                                                              .currentUseruid,
+                                                          snapshot
+                                                              .data![idx]
+                                                              .user
+                                                              .uid
+                                                        ]);
+                                                  },
+                                                  padding: EdgeInsets.zero,
+                                                  borderRadius: 1,
+                                                  iconSize:
+                                                      const Size(35, 35),
+                                                  isVideoCall: true,
+                                                  resourceID: "zego_call",
+                                                  invitees: [
+                                                    ZegoUIKitUser(
+                                                      id: snapshot
+                                                          .data![idx]
+                                                          .user
+                                                          .uid,
+                                                      name: snapshot
+                                                          .data![idx]
+                                                          .user
+                                                          .name,
+                                                    ),
+                                                  ],
+                                                ),
+
+                                                // Row(
+                                                //   children: [
+                                                //     Expanded(
+                                                //       child:
+                                                //     ),
+                                                //     Text(snapshot
+                                                //         .data![idx].callCount
+                                                //         .toString()),
+                                                //   ],
+                                                // ),
                                               );
                                             },
                                           );
@@ -220,53 +265,116 @@ class CallHistory extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Call History"),
-        actions: [
-          ZegoSendCallInvitationButton(
-            onPressed: (a, b, c) {
-              db.addTocallLogs("${logs.user.uid}-${db.currentUseruid}",
-                  [db.currentUseruid, logs.user.uid]);
-            },
-            borderRadius: 1,
-            iconSize: const Size(30, 30),
-            isVideoCall: true,
-            resourceID: "zego_call",
-            invitees: [
-              ZegoUIKitUser(
-                id: logs.user.uid,
-                name: logs.user.name,
-              ),
-            ],
-          ),
-        ],
       ),
-      body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage:
-                      CachedNetworkImageProvider(logs.user.displayProfile),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 35,
+                        backgroundImage: CachedNetworkImageProvider(
+                            logs.user.displayProfile),
+                      ),
+                      const SizedBox(width: 20),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            logs.user.name,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineSmall!
+                                .copyWith(color: Colors.black),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            formatDate(logs.callTime.first.toDate().toString()),
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelMedium!
+                                .copyWith(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  ZegoSendCallInvitationButton(
+                    onPressed: (a, b, c) {
+                      db.addTocallLogs("${logs.user.uid}-${db.currentUseruid}",
+                          [db.currentUseruid, logs.user.uid]);
+                    },
+                    padding: EdgeInsets.zero,
+                    borderRadius: 1,
+                    iconSize: const Size(45, 45),
+                    isVideoCall: true,
+                    resourceID: "zego_call",
+                    invitees: [
+                      ZegoUIKitUser(
+                        id: logs.user.uid,
+                        name: logs.user.name,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              Divider(color: Colors.green.shade100),
+              Expanded(
+                child: ListView(
+                  children: logs.callTime
+                      .map((e) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                const Icon(CupertinoIcons.phone,
+                                    color: CupertinoColors.activeGreen),
+                                const SizedBox(width: 10),
+                                Text(
+                                    extractTime(
+                                        e.toDate().toString().substring(0, 19)),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium!
+                                        .copyWith(color: Colors.grey)),
+                              ],
+                            ),
+                          ))
+                      .toList(),
                 ),
-                const SizedBox(width: 20),
-                Column(
-                  children: [
-                    Text(logs.user.name),
-                    Text(timeago.format(logs.callTime.first.toDate())),
-                  ],
-                ),
-              ],
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: logs.callTime
-                  .map((e) => Text(e.toDate().toString().substring(0, 19)))
-                  .toList(),
-            )
-          ]),
+              )
+            ]),
+      ),
     );
+  }
+
+  String extractTime(String dateTimeString) {
+    DateTime dateTime = DateTime.parse(dateTimeString);
+    return DateFormat('hh:mm a').format(dateTime); // Format to HH:mm
+  }
+
+  String formatDate(String dateString) {
+    DateTime inputDate = DateTime.parse(dateString);
+    DateTime today = DateTime.now();
+    DateTime yesterday = today.subtract(const Duration(days: 1));
+
+    if (inputDate.year == today.year &&
+        inputDate.month == today.month &&
+        inputDate.day == today.day) {
+      return 'Today';
+    } else if (inputDate.year == yesterday.year &&
+        inputDate.month == yesterday.month &&
+        inputDate.day == yesterday.day) {
+      return 'Yesterday';
+    } else {
+      return DateFormat('d MMMM').format(inputDate); // Example: 20 Oct
+    }
   }
 }

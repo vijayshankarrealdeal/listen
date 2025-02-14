@@ -88,7 +88,29 @@ class Database with ChangeNotifier {
     }
   }
 
-  Stream<List<DailyTips>> getDailyTips() {
+  Stream<List<DailyTips>> getCombinedDailyTips() {
+    return CombineLatestStream.combine2<List<String>, List<DailyTips>,
+        List<DailyTips>>(
+      _getBanners(),
+      _getDailyTips(),
+      (banners, dailyTips) {
+        if (banners.isNotEmpty) {
+          return dailyTips.map((tip) {
+            final banner = banners.isNotEmpty ? banners.first : "";
+            return DailyTips(
+              imageUrl: tip.imageUrl,
+              color: tip.color,
+              text: tip.text,
+              banners: banner, // Add the first banner as an example
+            );
+          }).toList();
+        }
+        return dailyTips;
+      },
+    );
+  }
+
+  Stream<List<DailyTips>> _getDailyTips() {
     return _ref.collection("daily_tips").snapshots().asyncMap((snapshot) async {
       if (snapshot.docs.isNotEmpty) {
         List<DailyTips> allTips = [];
@@ -100,16 +122,12 @@ class Database with ChangeNotifier {
 
           if (tips != null) {
             for (var tip in tips) {
-              String imageUrl =
-                  tip.toString(); // Assuming each tip is an image URL
-
-              // Get dominant color from the image
-              Color dominantColor = await _getDominantColorFromImage(imageUrl);
-
-              // Create a DailyTips object and add it to the list
+              String imageUrl = tip.toString();
               allTips.add(
                 DailyTips(
-                    imageUrl: imageUrl, color: dominantColor, text: text ?? ''),
+                    imageUrl: imageUrl,
+                    color: Colors.transparent,
+                    text: text ?? ''),
               );
             }
           }
@@ -120,14 +138,6 @@ class Database with ChangeNotifier {
 
       return <DailyTips>[]; // Return an empty list if no documents found
     });
-  }
-
-  Future<Color> _getDominantColorFromImage(String imageUrl) async {
-    final paletteGenerator = await PaletteGenerator.fromImageProvider(
-      NetworkImage(imageUrl),
-    );
-    return paletteGenerator.dominantColor?.color ??
-        Colors.grey; // Fallback to grey if no color found
   }
 
   Stream<List<CallLogs>> getCallLogs() {
@@ -304,7 +314,7 @@ class Database with ChangeNotifier {
     return snapshotData.docs.map((e) => FUsers.fromJson(e.data())).toList();
   }
 
-  Stream<List<String>> getBanners() {
+  Stream<List<String>> _getBanners() {
     return _ref.collection("banners").snapshots().map((snap) {
       return snap.docs
           .map((doc) => doc.data()['banner_url'] as String)

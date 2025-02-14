@@ -4,22 +4,21 @@ class TempData {
   }
 
   List<String> profilePic = [
-    'https://images.pexels.com/photos/18892681/pexels-photo-18892681/free-photo-of-blonde-model-in-shadow.jpeg',
-    'https://images.pexels.com/photos/15037721/pexels-photo-15037721/free-photo-of-man-sitting-on-chair.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/6480700/pexels-photo-6480700.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/17360606/pexels-photo-17360606/free-photo-of-beautiful-woman-in-white-tank-top.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/11041295/pexels-photo-11041295.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/19794933/pexels-photo-19794933/free-photo-of-beautiful-bride-with-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/18398363/pexels-photo-18398363/free-photo-of-woman-in-white-shirt.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/12225939/pexels-photo-12225939.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/27928237/pexels-photo-27928237/free-photo-of-young-woman-in-white-crochet-dress-and-jewelry.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-    'https://images.pexels.com/photos/16094696/pexels-photo-16094696/free-photo-of-face-of-smiling-woman.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+    "https://images.pexels.com/photos/16581286/pexels-photo-16581286/free-photo-of-handsome-man-in-jacket-walking-down-city-street.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/806835/pexels-photo-806835.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/3760376/pexels-photo-3760376.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/4050348/pexels-photo-4050348.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/460621/pexels-photo-460621.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/1181418/pexels-photo-1181418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/374822/pexels-photo-374822.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+    'https://images.pexels.com/photos/2381069/pexels-photo-2381069.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   ];
 
   List<Map<String, dynamic>> psyData = [
     {
       "uid": "EWaa6QEIrggJWzihp8oIcQnDFNE3",
-      "name": "Dr. Emily Smith",
+      "name": "Dr. Eric Smith",
       "psychologist_title": "Clinical Psychologist",
       "specialization": "Cognitive Behavioral Therapy",
       "years_of_experience": 10,

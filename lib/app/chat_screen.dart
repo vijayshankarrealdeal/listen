@@ -26,29 +26,6 @@ class ChatDetail extends StatelessWidget {
           title: Text(
             notUsername,
           ),
-          actions: const [
-            // ZegoSendCallInvitationButton(
-            //   onPressed: (a, b, c) {
-            //     String otherUseruid = uids
-            //         .where((x) => x.compareTo(db.currentUseruid) != 0)
-            //         .first;
-            //     db.addTocallLogs("$otherUseruid-${db.currentUseruid}",
-            //         [db.currentUseruid, otherUseruid]);
-            //   },
-            //   borderRadius: 1,
-            //   iconSize: const Size(30, 30),
-            //   isVideoCall: true,
-            //   resourceID: "zego_call",
-            //   invitees: [
-            //     ZegoUIKitUser(
-            //       id: uids
-            //           .where((x) => x.compareTo(db.currentUseruid) != 0)
-            //           .first,
-            //       name: notUsername,
-            //     ),
-            //   ],
-            // ),
-          ],
         ),
         body: SafeArea(
           child: StreamBuilder<List<ChatMessage>>(
@@ -60,48 +37,54 @@ class ChatDetail extends StatelessWidget {
                   return Column(
                     children: [
                       Expanded(
-                        child: ListView.builder(
-                          reverse: true,
-                          itemCount: sortedData.length,
-                          itemBuilder: (ctx, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Provider<ChatMessage>.value(
-                                value: sortedData[index],
-                                child: ChatsWidget(
-                                  deleteMesage: () {},
-                                  db: db,
-                                  editdelete: () => showCupertinoDialog(
-                                    context: context,
-                                    builder: (ctx) => CupertinoAlertDialog(
-                                      title: const Text("Edit"),
-                                      content: CupertinoTextField(
-                                        maxLines: 5,
-                                        onChanged: (s) {},
-                                        controller: TextEditingController(
-                                            text: sortedData[index].message),
+                        child: sortedData.isEmpty
+                            ? const Center(
+                                child: Text("No messages yet. Start chatting!"),
+                              )
+                            : ListView.builder(
+                                reverse: true,
+                                itemCount: sortedData.length,
+                                itemBuilder: (ctx, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Provider<ChatMessage>.value(
+                                      value: sortedData[index],
+                                      child: ChatsWidget(
+                                        deleteMesage: () {},
+                                        db: db,
+                                        editdelete: () => showCupertinoDialog(
+                                          context: context,
+                                          builder: (ctx) =>
+                                              CupertinoAlertDialog(
+                                            title: const Text("Edit"),
+                                            content: CupertinoTextField(
+                                              maxLines: 5,
+                                              onChanged: (s) {},
+                                              controller: TextEditingController(
+                                                  text: sortedData[index]
+                                                      .message),
+                                            ),
+                                            actions: [
+                                              CupertinoButton(
+                                                child: const Text("Okay"),
+                                                onPressed: () {
+                                                  // {mess.edut(mess.messages[index].id);
+                                                  // Navigator.pop(context);}
+                                                },
+                                              ),
+                                              CupertinoButton(
+                                                child: const Text("Cancel"),
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                       ),
-                                      actions: [
-                                        CupertinoButton(
-                                          child: const Text("Okay"),
-                                          onPressed: () {
-                                            // {mess.edut(mess.messages[index].id);
-                                            // Navigator.pop(context);}
-                                          },
-                                        ),
-                                        CupertinoButton(
-                                          child: const Text("Cancel"),
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                        ),
-                                      ],
                                     ),
-                                  ),
-                                ),
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0),
@@ -117,49 +100,23 @@ class ChatDetail extends StatelessWidget {
                                   maxLines: 6,
                                   onChanged: (s) {},
                                   controller: formSubmit.controller,
-                                  // suffix: Consumer<ImagePick>(builder: (context, data, _) {
-                                  //   return CupertinoButton(
-                                  //     padding: EdgeInsets.zero,
-                                  //     onPressed:
-                                  //         //  mess.controller.text.isEmpty
-                                  //         //     ?
-                                  //         () async {
-                                  //       // data.pickMulti(db, ImageSource.gallery);
-                                  //       // for (var element in data.sendImage) {
-                                  //       //   mess.sendMessage(
-                                  //       //     ChatMessage(
-                                  //       //       id: const Uuid().v1(),
-                                  //       //       message: element,
-                                  //       //       useruid: db.uid,
-                                  //       //       dt: DateTime.now(),
-                                  //       //     ),
-                                  //       //     db,
-                                  //       //   );
-                                  //     },
-
-                                  //     // : () {
-                                  //     //     //send memoji
-                                  //     //   },
-                                  //     child:
-                                  //         // mess.controller.text.isEmpty
-                                  //         //     ?
-                                  //         const Icon(CupertinoIcons.app),
-                                  //     // :
-                                  //     // const FaIcon(
-                                  //     //     FontAwesomeIcons.faceGrin,
-                                  //     //     size: 20,
-                                  //     //   ),
-                                  //   );
-                                  // }),
                                   autofocus: false,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    hintText:
+                                        'Start the chat', // Optional: Add a hint
+                                  ),
                                 )),
                                 CupertinoButton(
+                                  padding: const EdgeInsets.only(right: 8,left: 8),
                                   onPressed: () => formSubmit.sendToDatabase(
                                     db,
                                     uids,
                                     chatRoomId,
                                   ),
-                                  child: const Icon(CupertinoIcons.location),
+                                  child: const Icon(CupertinoIcons.location,size: 38),
                                 )
                               ],
                             );
