@@ -51,7 +51,7 @@ void main() async {
     ], child: MyApp(navKey: navkey)));
   });
 }
-
+//android folderj
 class MyApp extends StatelessWidget {
   final GlobalKey<NavigatorState> navKey;
   const MyApp({super.key, required this.navKey});
